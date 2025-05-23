@@ -223,8 +223,18 @@ header nav ul li a:hover::after {
   top:-100px;
   width: 30px;
   height: 80px;
+  left: -30;
   
 }
+.logo-cadastrar{
+  position: relative;
+  top:-5px;
+  width: 30px;
+  height: 80px;
+  left: -30px;
+  
+}
+
 .btn-logar{
   background-color: #D62828;
   color: white;
@@ -260,4 +270,23 @@ header nav ul li a:hover::after {
   margin-bottom: 25px;
   font-size: 16px;
   outline: none;
+}
+.btn-cadastrar{
+   background-color: #D62828;
+  color: white;
+  padding: 12px 130px;
+  border-radius: 10px;
+  border: none;
+  box-shadow:  4px 2px 5px rgba(0, 0, 0, 0.6);
+  font-weight: bold;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 14px; 
+  text-align: center;
+  position: relative;
+  top: 0px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
+
 }
