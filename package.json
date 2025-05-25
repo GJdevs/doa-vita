@@ -1,0 +1,15 @@
+{
+  "name": "doa-vita",
+  "version": "1.0.0",
+  "description": "sistema web doa-vita projeto a3",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
