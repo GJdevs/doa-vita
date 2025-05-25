@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doa Vita</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <header>
+        <nav class="logo">
+            <a href="index.html">
+                <img src="fotos/logo.jpg" alt="logo" />
+            </a>
+        </nav>
+        <nav>
+            <ul>
+                <li><a href="">PAGINA INICIAL</a></li>
+                <li><a href="campanhas.html">CAMPANHAS</a></li>
+            </ul>
+        </nav>
+        <div class="dropdown">
+            <button class="btn-campanha">SUA CAMPANHA</button>
+            <div class="btn-drop">
+                <a href="Login.html">Login</a>
+                <a href="cadastrar.html">Cadastrar</a>
+            </div>
+        </div>
+    </header>
+
+
+
+    <section class=login-tela>
+  <form class="form-field">
+    <div class="div-campanha">
+
+         <div class="logo-cadastrar-campanha">
+                <img src="fotos/logo.jpg" alt="logo-formulario" />
+            </div>
+    <label for="nome">Nome da campanha:</label>
+    <input type="text" id="nome" name="nome" required>
+
+    <div class="linha-dupla">
+      <div>
+        <label for="rua">Rua:</label>
+        <input type="text" id="rua" name="rua" required>
+      </div>
+      <div>
+        <label for="num">Num:</label>
+        <input type="text" id="num" name="num" required>
+      </div>
+    </div>
+
+    <label for="telefone">Telefone:</label>
+    <input type="tel" id="telefone" name="telefone" required>
+
+    <label for="tipo">Tipo de sanguíneo aceito:</label>
+    <select id="tipo" name="tipo" >
+      <option value="todos">Todos</option>
+      <option value="A+">A+</option>
+      <option value="A-">A-</option>
+      <option value="B+">B+</option>
+      <option value="B-">B-</option>
+      <option value="AB+">AB+</option>
+      <option value="AB-">AB-</option>
+      <option value="O+">O+</option>
+      <option value="O-">O-</option>
+    </select>
+
+    <label for="descricao">Breve descrição:</label>
+    <textarea id="descricao" name="descricao" rows="4"></textarea>
+   
+    <label for="imagem">Imagem: <small>(coloque uma imagem que represente sua campanha)</small></label>
+    <input type="file" id="imagem" name="imagem" accept="image/*">
+     <button class="btn-campanha-cadastrar">ENVIAR CAMPANHA</button>
+    </div>
+  </form>
+    </section>
+</body>
+
+</html>
