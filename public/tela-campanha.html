@@ -29,23 +29,23 @@
     </header>
 
     <div class="campanhas-ativas">
-        <h2>CAMPANHAS ATIVAS</h2>
+        <h2>Nome da Campanha</h2>
       
     </div>
 
-    <section class=campnhas>
+    <section class=telas-campanhas>
+    <img src="fotos/doacao-de-sangue.jpg" alt="teste">
+    <div>
+
+    </div>
+    <ul>
+    <li>Endereço: </li>
+    <li>Telefone: </li>
+    <li>Tipo sanguineo: </li>
+    <li>Sobre a Campanha: </li>
+    </ul>   
+
     
     </section>
-    <script>
-  const links = document.querySelectorAll('header nav ul li a');
-  const currentPage = window.location.pathname.split('/').pop();
-
-  links.forEach(link => {
-    const linkPage = link.getAttribute('href');
-    if (linkPage === currentPage) {
-      link.classList.add('active');
-    }
-  });
-</script>
   </body>
 </html>

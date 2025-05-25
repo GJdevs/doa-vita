@@ -15,7 +15,7 @@
       </nav>
       <nav>
           <ul>
-            <li ><a href="">PAGINA INICIAL</a></li>
+            <li ><a href="index.html">PAGINA INICIAL</a></li>
             <li><a href="campanhas.html">CAMPANHAS</a></li>
           </ul>
       </nav>
@@ -52,5 +52,16 @@
         <img src="fotos/doacao-de-sangue.jpg" alt="doação de sangue" class="imagem"/>
       </div>
     </section>
+    <script>
+  const links = document.querySelectorAll('header nav ul li a');
+  const currentPage = window.location.pathname.split('/').pop();
+
+  links.forEach(link => {
+    const linkPage = link.getAttribute('href');
+    if (linkPage === currentPage) {
+      link.classList.add('active');
+    }
+  });
+</script>
   </body>
 </html>

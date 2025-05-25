@@ -27,25 +27,20 @@
           </div>
       </div>  
     </header>
+   <div class="container">
+    <aside class="sidebar">
+      <p><strong>Nome</strong></p>
+      <p>Email</p>
+      <p>Telefone</p>
+    </aside>
 
-    <div class="campanhas-ativas">
-        <h2>CAMPANHAS ATIVAS</h2>
-      
-    </div>
+    <main class="conteudo">
+      <h2>Suas campanhas ativas</h2>
+     
 
-    <section class=campnhas>
+      <button class="btn-cadastrar-uma-campanha">Cadastrar uma campanha</button>
+    </main>
+  </div>
     
-    </section>
-    <script>
-  const links = document.querySelectorAll('header nav ul li a');
-  const currentPage = window.location.pathname.split('/').pop();
-
-  links.forEach(link => {
-    const linkPage = link.getAttribute('href');
-    if (linkPage === currentPage) {
-      link.classList.add('active');
-    }
-  });
-</script>
-  </body>
+</body>
 </html>
