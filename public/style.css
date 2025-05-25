@@ -270,6 +270,16 @@ header nav ul li a:hover::after {
   margin-bottom: 25px;
   font-size: 16px;
   outline: none;
+  
+}
+.form-field input[type="file"] {
+  margin-top: 10px;
+  border: none;
+}
+.form-field input[name="rua"]{
+  width: 300px;
+}.form-field input[name="num"]{
+  width: 60px;
 }
 .btn-cadastrar{
    background-color: #D62828;
@@ -289,4 +299,44 @@ header nav ul li a:hover::after {
   justify-content: center;
   margin: auto;
 
+}
+.div-campanha{
+    width: 60%;
+  height: 650px;
+  padding: 40px;
+  position:relative;
+  justify-content: center;
+  margin:auto;
+  flex-direction: column;
+  border: 2px solid grey;
+  border-radius: 15px;
+  border-color: #2a7570;
+  background-color: #F6EEE4;
+  box-shadow:  4px 2px 5px rgba(0, 0, 0, 0.6);
+}
+.linha-dupla{
+  
+  display: flex;
+  gap: 20px;
+}
+.linha-dupla div{
+flex: 1;
+}
+.div-campanha img{
+  display: block;
+  margin-left: 250px;
+  
+}
+.btn-campanha-cadastrar{
+  background-color:  #D62828;;
+  border: none;
+  padding: 12px 130px;;
+  border-radius: 10px;
+  display: block;
+  margin-left: 95px;
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  box-shadow:  4px 2px 5px rgba(0, 0, 0, 0.6);
 }
