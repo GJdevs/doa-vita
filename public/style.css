@@ -45,14 +45,15 @@ header nav ul li a::after {
   content: '';
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -2px;
   width: 0;
   height: 2px;
   background-color: #000;
-  transition: 0.2s;
+  transition: 0.5s;
 }
 
-header nav ul li a:hover::after {
+header nav ul li a:hover::after,
+header nav ul li a.active::after {
   width: 100%;
 }
 
@@ -112,7 +113,7 @@ header nav ul li a:hover::after {
 
 .logo img {
   width: 140px;
-  /* tamanho fixo */
+  
   height: auto;
 }
 
@@ -330,7 +331,7 @@ flex: 1;
 .btn-campanha-cadastrar{
   background-color:  #D62828;;
   border: none;
-  padding: 12px 130px;;
+  padding: 12px 130px;
   border-radius: 10px;
   display: block;
   margin-left: 95px;
@@ -339,4 +340,76 @@ flex: 1;
   color: white;
   font-weight: bold;
   box-shadow:  4px 2px 5px rgba(0, 0, 0, 0.6);
+}
+.telas-campanhas{
+  display: flex;
+  
+  gap: 30px;
+
+}
+.telas-campanhas img{
+  
+  width: 500px;
+  height: 500px;
+  margin: 40px;
+  
+}
+.telas-campanhas  ul li{
+  display: block;
+  
+  margin-bottom: 30px;
+  margin-top: 80px;
+  font-size: 18px;
+  
+}
+.campanhas-ativas h2{
+  color: #000;
+  
+}
+.body-sua-campanha{
+  background-color: #F6EEE4;
+
+}
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 200px;
+  padding: 20px;
+  border-right: 1px solid #333;
+  background-color: #F6EEE4;
+}
+
+.sidebar p {
+  background-color: #F6EEE4;
+  margin: 20px 0;
+  font-size: 16px;
+}
+
+.conteudo {
+  background-color: #F6EEE4;
+  flex: 1;
+  padding: 30px;
+  position: relative;
+}
+
+.conteudo h2 {
+  margin-top: 0;
+  font-size: 20px;
+}
+.btn-cadastrar-uma-campanha{
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  padding: 12px 24px;
+  background-color: #c7302c;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 2px 3px 5px rgba(0,0,0,0.3);
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
 }

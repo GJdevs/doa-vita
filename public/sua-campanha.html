@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doa Vita</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+        <nav  class="logo">
+            <a href="index.html">
+              <img src="fotos/logo.jpg" alt="logo" />
+            </a>  
+          </nav>
+       <nav>
+          <ul>
+            <li><a href="index.html">PAGINA INICIAL</a></li>
+            <li><a href="campanhas.html">CAMPANHAS</a></li>
+          </ul>
+      </nav>
+        <div class="dropdown">
+        <button class="btn-campanha">SUA CAMPANHA</button>
+          <div class="btn-drop">
+            <a href="Login.html">Login</a>
+            <a href="cadastrar.html">Cadastrar</a>
+          </div>
+      </div>  
+    </header>
+   <div class="container">
+    <aside class="sidebar">
+      <p><strong>Nome</strong></p>
+      <p>Email</p>
+      <p>Telefone</p>
+    </aside>
+
+    <main class="conteudo">
+      <h2>Suas campanhas ativas</h2>
+     
+
+      <button class="btn-cadastrar-uma-campanha">Cadastrar uma campanha</button>
+    </main>
+  </div>
+  <script>
+  fetch('/usuario-logado')
+    .then(res => res.json())
+    .then(data => {
+      const dropdownDiv = document.querySelector('.dropdown .btn-drop');
+      const dropdownBtn = document.querySelector('.dropdown .btn-campanha');
+      if (data.loggedIn) {
+        dropdownBtn.textContent = 'Minhas campanhas';
+        dropdownDiv.innerHTML = `
+          <a href="minhas-campanhas.html">Minhas campanhas</a>
+          <a href="#" id="logout-link">Sair</a>
+        `;
+        document.getElementById('logout-link').addEventListener('click', () => {
+          fetch('/logout', { method: 'POST' })
+            .then(() => window.location.href = '/Login.html');
+        });
+      } else {
+        dropdownBtn.textContent = 'Sua campanha';
+        dropdownDiv.innerHTML = `
+          <a href="Login.html">Login</a>
+          <a href="cadastrar.html">Cadastrar</a>
+        `;
+      }
+    });
+</script>
+
+    
+</body>
+</html>

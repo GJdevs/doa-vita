@@ -1,56 +1,109 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Doa Vita</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <nav  class="logo">
-        <a href="index.html">
-          <img src="fotos/logo.jpg" alt="logo" />
-        </a>  
-      </nav>
-      <nav>
-          <ul>
-            <li ><a href="">PAGINA INICIAL</a></li>
-            <li><a href="campanhas.html">CAMPANHAS</a></li>
-          </ul>
-      </nav>
-      <div class="dropdown">
-        <button class="btn-campanha">SUA CAMPANHA</button>
-          <div class="btn-drop">
-            <a href="Login.html">Login</a>
-            <a href="cadastrar.html">Cadastrar</a>
-          </div>
-      </div>  
-    </header>
 
-    <div class="hero">
-      <img
-        src="fotos/banner.jpeg"
-        alt="Banner"
-      />
-      
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doa Vita</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <header>
+    <nav class="logo">
+      <a href="index.html">
+        <img src="fotos/logo.jpg" alt="logo" />
+      </a>
+    </nav>
+    <nav>
+      <ul>
+        <li><a href="index.html">PAGINA INICIAL</a></li>
+        <li><a href="campanhas.html">CAMPANHAS</a></li>
+      </ul>
+    </nav>
+    <div class="dropdown" id="user-menu">
+      <button class="btn-campanha">SUA CAMPANHA</button>
+      <div class="btn-drop">
+        <a href="Login.html">Login</a>
+        <a href="cadastrar.html">Cadastrar</a>
+      </div>
     </div>
 
-    <section class="objetivo">
-      <div class="texto">
-        <h2>QUAL NOSSO OBJETIVO?</h2>
-        <p>Conectar quem pode doar com quem mais precisa.<br>
-          Transformar solidariedade em ação.<br><br>
-          Nosso objetivo é dar voz a campanhas que salvam vidas — sejam de hospitais, instituições ou pessoas comuns que enfrentam momentos urgentes.<br>
-          Com apenas alguns cliques, você pode mudar o destino de alguém.<br><br>
-          Aqui, cada gota conta. Cada história importa.<br>
-          Juntos, vamos ampliar o alcance da esperança e tornar a doação de sangue mais próxima, mais fácil e mais humana.</p>
-      </div>
-      <div class= "imagem-container">
-        <div class="borda borda-vermelha"></div>
-        <div class="borda borda-verde"></div>
-        <img src="fotos/doacao-de-sangue.jpg" alt="doação de sangue" class="imagem"/>
-      </div>
-    </section>
-  </body>
+  </header>
+
+  <div class="hero">
+    <img src="fotos/banner.jpeg" alt="Banner" />
+
+  </div>
+
+  <section class="objetivo">
+    <div class="texto">
+      <h2>QUAL NOSSO OBJETIVO?</h2>
+      <p>Conectar quem pode doar com quem mais precisa.<br>
+        Transformar solidariedade em ação.<br><br>
+        Nosso objetivo é dar voz a campanhas que salvam vidas — sejam de hospitais, instituições ou pessoas comuns que
+        enfrentam momentos urgentes.<br>
+        Com apenas alguns cliques, você pode mudar o destino de alguém.<br><br>
+        Aqui, cada gota conta. Cada história importa.<br>
+        Juntos, vamos ampliar o alcance da esperança e tornar a doação de sangue mais próxima, mais fácil e mais humana.
+      </p>
+    </div>
+    <div class="imagem-container">
+      <div class="borda borda-vermelha"></div>
+      <div class="borda borda-verde"></div>
+      <img src="fotos/doacao-de-sangue.jpg" alt="doação de sangue" class="imagem" />
+    </div>
+  </section>
+  <script>
+    // Função para verificar se usuário está logado e atualizar menu
+    async function checkLogin() {
+      try {
+        const res = await fetch('/usuario-logado');
+        const data = await res.json();
+
+        const dropdown = document.getElementById('user-menu');
+        const btn = dropdown.querySelector('.btn-campanha');
+        const menu = dropdown.querySelector('.btn-drop');
+
+        if (data.loggedIn) {
+          btn.textContent = 'Minhas Campanhas';
+          menu.innerHTML = `
+          <a href="sua-campanha.html">Minhas Campanhas</a>
+          <a href="#" id="logout-btn">Sair</a>
+        `;
+
+          document.getElementById('logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout', { method: 'POST' });
+            window.location.href = '/index.html'; // redireciona para a página inicial após logout
+          });
+
+        } else {
+          btn.textContent = 'Sua Campanha';
+          menu.innerHTML = `
+          <a href="Login.html">Login</a>
+          <a href="cadastrar.html">Cadastrar</a>
+        `;
+        }
+      } catch (err) {
+        console.error('Erro ao verificar login:', err);
+      }
+    }
+
+    checkLogin();
+
+    // Seu código atual para marcar o menu ativo também pode ficar aqui
+    const links = document.querySelectorAll('header nav ul li a');
+    const currentPage = window.location.pathname.split('/').pop();
+
+    links.forEach(link => {
+      const linkPage = link.getAttribute('href');
+      if (linkPage === currentPage) {
+        link.classList.add('active');
+      }
+    });
+  </script>
+
+</body>
+
 </html>

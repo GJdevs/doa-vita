@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Doa Vita</title>
+    <title>Doa Vita - Cadastro</title>
     <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -17,7 +17,7 @@
         </nav>
         <nav>
             <ul>
-                <li><a href="">PAGINA INICIAL</a></li>
+                <li><a href="index.html">PÁGINA INICIAL</a></li>
                 <li><a href="campanhas.html">CAMPANHAS</a></li>
             </ul>
         </nav>
@@ -30,34 +30,66 @@
         </div>
     </header>
 
+    <section class="login-tela">
+        <form action="/cadastrar" method="POST">
 
+            <div class="div-login">
+                <div class="logo-cadastrar">
+                    <img src="fotos/logo.jpg" alt="logo-formulario" />
+                </div>
+                <div class="form-field">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
 
-    <section class=login-tela>
-        <form action="fazer-login" method="get">
-           <div class="div-login"> 
-            <div class="logo-cadastrar">
-                <img src="fotos/logo.jpg" alt="logo-formulario" />
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" required>
+
+                    <label for="cpfcnpj">CPF/CNPJ:</label>
+                    <input type="text" id="cpfcnpj" name="cpfcnpj" required>
+
+                    <label for="telefone">Telefone:</label>
+                    <input type="text" id="telefone" name="telefone" required>
+
+                    <label for="senha">Senha:</label>
+                    <input type="password" id="senha" name="senha" required>
+
+                    <button type="submit" class="btn-cadastrar">Cadastrar</button>
+                </div>
             </div>
-            <div class="form-field">
-                <label for="nome">Nome: </label>
-                <input type="text" id="nome" name="nome">
-                <label for="email">Email: </label>
-                <input type="email" id="email" name="email">
-                <label for="CPF/CNPJ">CPF/CNPJ: </label>
-                <input type="text" id="CPF" name="cpf/cnpj" placeholder="">
-                <label for="telefone">Telefone: </label>
-                <input type="text" id="telefone" name="telefone">
-                <label for="senha">Senha: </label>
-                <input type="password" id="senha" name="senha">
-                
-            
-            
-                <button class="btn-cadastrar">Cadastrar</button>
-                    </div>
-            </div>
-
         </form>
     </section>
+
+    <script>
+        document.getElementById("formCadastro").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const data = {
+                nome: document.getElementById("nome").value,
+                email: document.getElementById("email").value,
+                cpfcnpj: document.getElementById("cpfcnpj").value,
+                telefone: document.getElementById("telefone").value,
+                senha: document.getElementById("senha").value,
+            };
+
+            try {
+                const res = await fetch("/api/users", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(data),
+                });
+
+                if (res.ok) {
+                    alert("Usuário cadastrado com sucesso!");
+                    this.reset();
+                } else {
+                    alert("Erro ao cadastrar. Verifique os dados.");
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro ao conectar com o servidor.");
+            }
+        });
+    </script>
 </body>
 
 </html>
