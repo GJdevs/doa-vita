@@ -3,49 +3,75 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Doa Vita</title>
+    <title>Doa Vita - Detalhes da Campanha</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header>
-        <nav  class="logo">
-            <a href="index.html">
-              <img src="fotos/logo.jpg" alt="logo" />
-            </a>  
-          </nav>
-       <nav>
-          <ul>
-            <li><a href="index.html">PAGINA INICIAL</a></li>
-            <li><a href="campanhas.html">CAMPANHAS</a></li>
-          </ul>
+      <nav class="logo">
+        <a href="index.html">
+          <img src="fotos/logo.jpg" alt="logo" />
+        </a>  
       </nav>
-        <div class="dropdown">
+      <nav>
+        <ul>
+          <li><a href="index.html">PAGINA INICIAL</a></li>
+          <li><a href="campanhas.html">CAMPANHAS</a></li>
+        </ul>
+      </nav>
+      <div class="dropdown">
         <button class="btn-campanha">SUA CAMPANHA</button>
-          <div class="btn-drop">
-            <a href="Login.html">Login</a>
-            <a href="cadastrar.html">Cadastrar</a>
-          </div>
+        <div class="btn-drop">
+          <a href="Login.html">Login</a>
+          <a href="cadastrar.html">Cadastrar</a>
+        </div>
       </div>  
     </header>
 
     <div class="campanhas-ativas">
-        <h2>Nome da Campanha</h2>
-      
+      <h2 id="nome-campanha">Nome da Campanha</h2>
     </div>
 
-    <section class=telas-campanhas>
-    <img src="fotos/doacao-de-sangue.jpg" alt="teste">
-    <div>
-
-    </div>
-    <ul>
-    <li>Endereço: </li>
-    <li>Telefone: </li>
-    <li>Tipo sanguineo: </li>
-    <li>Sobre a Campanha: </li>
-    </ul>   
-
-    
+    <section class="telas-campanhas">
+      <img id="imagem-campanha" src="fotos/doacao-de-sangue.jpg" alt="Imagem da campanha" />
+      <div>
+        <ul>
+          <li><strong>Endereço:</strong> <span id="endereco-campanha"></span></li>
+          <li><strong>Telefone:</strong> <span id="telefone-campanha"></span></li>
+          <li><strong>Tipo sanguíneo:</strong> <span id="tipo-campanha"></span></li>
+          <li><strong>Sobre a Campanha:</strong> <span id="descricao-campanha"></span></li>
+        </ul>
+      </div>
     </section>
+
+    <script>
+      // Pega o parâmetro id da URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const campanhaId = urlParams.get('id');
+
+      if (!campanhaId) {
+        alert('Campanha não especificada.');
+      } else {
+        fetch(`/campanhas/${campanhaId}`)
+          .then(response => {
+            if (!response.ok) throw new Error('Campanha não encontrada');
+            return response.json();
+          })
+          .then(campanha => {
+            // Atualiza o conteúdo da página com os dados da campanha
+            document.getElementById('nome-campanha').textContent = campanha.nome || 'Sem nome';
+            document.getElementById('imagem-campanha').src = campanha.imagem || 'fotos/default.jpg';
+            document.getElementById('imagem-campanha').alt = `Imagem da campanha ${campanha.nome}`;
+            document.getElementById('endereco-campanha').textContent = `${campanha.rua || ''}, ${campanha.numero || ''}`;
+            document.getElementById('telefone-campanha').textContent = campanha.telefone || 'Não informado';
+            document.getElementById('tipo-campanha').textContent = campanha.tipoSanguineo || 'Não informado';
+            document.getElementById('descricao-campanha').textContent = campanha.descricao || 'Sem descrição';
+          })
+          .catch(err => {
+            console.error(err);
+            alert('Erro ao carregar dados da campanha.');
+          });
+      }
+    </script>
   </body>
 </html>

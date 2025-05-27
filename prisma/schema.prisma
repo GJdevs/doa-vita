@@ -1,12 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Exemplo de schema.prisma corrigido para MongoDB:
 
 generator client {
   provider = "prisma-client-js"
- 
 }
 
 datasource db {
@@ -15,11 +10,24 @@ datasource db {
 }
 
 model Usuario {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
   nome      String
-  email     String   @unique
+  email     String     @unique
   cpfcnpj   String
   telefone  String
   senha     String
-  criadoEm  DateTime @default(now())
+  campanhas Campanha[]
+}
+
+model Campanha {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  nome          String
+  rua           String
+  numero        String
+  telefone      String
+  tipoSanguineo String
+  descricao     String?
+  imagem        String?
+  usuario       Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId     String   @db.ObjectId
 }

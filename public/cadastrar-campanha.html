@@ -21,7 +21,7 @@
                 <li><a href="campanhas.html">CAMPANHAS</a></li>
             </ul>
         </nav>
-        <div class="dropdown">
+        <div class="dropdown" id="user-menu">
             <button class="btn-campanha">SUA CAMPANHA</button>
             <div class="btn-drop">
                 <a href="Login.html">Login</a>
@@ -33,7 +33,8 @@
 
 
     <section class=login-tela>
-  <form class="form-field">
+  <form class= "form-field" action="/cadastrar-campanha" method="POST" enctype="multipart/form-data">
+
     <div class="div-campanha">
 
          <div class="logo-cadastrar-campanha">
@@ -73,11 +74,49 @@
     <textarea id="descricao" name="descricao" rows="4"></textarea>
    
     <label for="imagem">Imagem: <small>(coloque uma imagem que represente sua campanha)</small></label>
-    <input type="file" id="imagem" name="imagem" accept="image/*">
-     <button class="btn-campanha-cadastrar">ENVIAR CAMPANHA</button>
+    <input type="file" name="imagem" accept="image/*" required>
+     <button class="btn-campanha-cadastrar" type="submit">ENVIAR CAMPANHA</button>
     </div>
   </form>
     </section>
+    <script>
+    // Função para verificar se usuário está logado e atualizar menu
+    async function checkLogin() {
+      try {
+        const res = await fetch('/usuario-logado');
+        const data = await res.json();
+
+        const dropdown = document.getElementById('user-menu');
+        const btn = dropdown.querySelector('.btn-campanha');
+        const menu = dropdown.querySelector('.btn-drop');
+
+        if (data.loggedIn) {
+          btn.textContent = 'Minhas Campanhas';
+          menu.innerHTML = `
+          <a href="sua-campanha.html">Minhas Campanhas</a>
+          <a href="#" id="logout-btn">Sair</a>
+        `;
+
+          document.getElementById('logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout', { method: 'POST' });
+            window.location.href = '/cadastrar-campanha.html'; // redireciona para a página inicial após logout
+          });
+
+        } else {
+          btn.textContent = 'Sua Campanha';
+          menu.innerHTML = `
+          <a href="Login.html">Login</a>
+          <a href="cadastrar.html">Cadastrar</a>
+        `;
+        }
+      } catch (err) {
+        console.error('Erro ao verificar login:', err);
+      }
+    }
+
+    checkLogin();
+    </script>
 </body>
 
 </html>

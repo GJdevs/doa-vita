@@ -19,7 +19,7 @@
             <li><a href="campanhas.html">CAMPANHAS</a></li>
           </ul>
       </nav>
-        <div class="dropdown">
+        <div class="dropdown" id="user-menu">
         <button class="btn-campanha">SUA CAMPANHA</button>
           <div class="btn-drop">
             <a href="Login.html">Login</a>
@@ -42,30 +42,59 @@
     </main>
   </div>
   <script>
-  fetch('/usuario-logado')
-    .then(res => res.json())
-    .then(data => {
-      const dropdownDiv = document.querySelector('.dropdown .btn-drop');
-      const dropdownBtn = document.querySelector('.dropdown .btn-campanha');
+  async function checkLogin() {
+    try {
+      const res = await fetch('/usuario-logado');
+      const data = await res.json();
+
+      const dropdown = document.getElementById('user-menu');
+      const btn = dropdown.querySelector('.btn-campanha');
+      const menu = dropdown.querySelector('.btn-drop');
+
       if (data.loggedIn) {
-        dropdownBtn.textContent = 'Minhas campanhas';
-        dropdownDiv.innerHTML = `
-          <a href="minhas-campanhas.html">Minhas campanhas</a>
+        btn.textContent = 'Minhas campanhas';
+        menu.innerHTML = `
+          <a href="sua-campanha.html">Minhas campanhas</a>
           <a href="#" id="logout-link">Sair</a>
         `;
-        document.getElementById('logout-link').addEventListener('click', () => {
-          fetch('/logout', { method: 'POST' })
-            .then(() => window.location.href = '/Login.html');
+
+        document.getElementById('logout-link').addEventListener('click', async (e) => {
+          e.preventDefault();
+          await fetch('/logout', { method: 'POST' });
+          window.location.href = '/Login.html';
         });
       } else {
-        dropdownBtn.textContent = 'Sua campanha';
-        dropdownDiv.innerHTML = `
+        btn.textContent = 'Sua campanha';
+        menu.innerHTML = `
           <a href="Login.html">Login</a>
           <a href="cadastrar.html">Cadastrar</a>
         `;
       }
+    } catch (err) {
+      console.error('Erro ao verificar login:', err);
+    }
+  }
+
+  checkLogin();
+
+  // Ativa link de menu como "ativo" (útil para destacar a página atual)
+  const links = document.querySelectorAll('header nav ul li a');
+  const currentPage = window.location.pathname.split('/').pop();
+  links.forEach(link => {
+    if (link.getAttribute('href') === currentPage) {
+      link.classList.add('active');
+    }
+  });
+
+  // Redireciona ao clicar no botão "Cadastrar uma campanha"
+  const cadastrarBtn = document.querySelector('.btn-cadastrar-uma-campanha');
+  if (cadastrarBtn) {
+    cadastrarBtn.addEventListener('click', () => {
+      window.location.href = 'cadastrar-campanha.html';
     });
+  }
 </script>
+
 
     
 </body>

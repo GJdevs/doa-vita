@@ -404,7 +404,7 @@ flex: 1;
   bottom: 30px;
   right: 30px;
   padding: 12px 24px;
-  background-color: #c7302c;
+  background-color: #D62828;
   color: white;
   border: none;
   border-radius: 10px;
@@ -413,3 +413,58 @@ flex: 1;
   cursor: pointer;
   font-weight: bold;
 }
+/* Container das campanhas */
+.campanhas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Cards das campanhas */
+.campanha-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 8px 8px 8px rgb(10, 110, 85);
+  overflow: hidden;
+  width: 220px;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.campanha-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.campanha-card h3 {
+  margin: 10px 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Botão que é um link */
+.campanha-card .btn-saiba-mais {
+  display: inline-block;
+  background-color: #D62828;
+  color: white;
+  padding: 10px 15px;
+  margin: 10px 0 20px 0;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.campanha-card .btn-saiba-mais:hover {
+  background-color: #a32020;
+}
+
+/* Título h2 da seção campanhas ativas */
+.campanhas-ativas h2 {
+  
+  font-size: 2rem;
+  color: #000000;
+}
+
