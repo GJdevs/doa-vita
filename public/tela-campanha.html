@@ -19,7 +19,7 @@
           <li><a href="campanhas.html">CAMPANHAS</a></li>
         </ul>
       </nav>
-      <div class="dropdown">
+      <div class="dropdown" id="user-menu">
         <button class="btn-campanha">SUA CAMPANHA</button>
         <div class="btn-drop">
           <a href="Login.html">Login</a>
@@ -72,6 +72,41 @@
             alert('Erro ao carregar dados da campanha.');
           });
       }
+      async function checkLogin() {
+      try {
+        const res = await fetch('/usuario-logado');
+        const data = await res.json();
+
+        const dropdown = document.getElementById('user-menu');
+        const btn = dropdown.querySelector('.btn-campanha');
+        const menu = dropdown.querySelector('.btn-drop');
+
+        if (data.loggedIn) {
+          btn.textContent = 'Minhas Campanhas';
+          menu.innerHTML = `
+          <a href="sua-campanha.html">Minhas Campanhas</a>
+          <a href="#" id="logout-btn">Sair</a>
+        `;
+
+          document.getElementById('logout-btn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await fetch('/logout', { method: 'POST' });
+            window.location.href = '/index.html'; // redireciona para a página inicial após logout
+          });
+
+        } else {
+          btn.textContent = 'Sua Campanha';
+          menu.innerHTML = `
+          <a href="Login.html">Login</a>
+          <a href="cadastrar.html">Cadastrar</a>
+        `;
+        }
+      } catch (err) {
+        console.error('Erro ao verificar login:', err);
+      }
+    }
+
+    checkLogin();
     </script>
   </body>
 </html>

@@ -1,34 +1,32 @@
 const express = require("express");
 const path = require("path");
 const { PrismaClient } = require("@prisma/client");
-const session = require('express-session');
-const multer = require('multer');
-const fs = require('fs');
-const { ObjectId } = require('mongodb'); // IMPORTANTE para IDs no MongoDB
+const session = require("express-session");
+const multer = require("multer");
+const fs = require("fs");
+const { ObjectId } = require("mongodb");
 
 const prisma = new PrismaClient();
 const app = express();
 const PORT = 3000;
 
-// Middleware de sessão
+// Sessões
 app.use(session({
-  secret: 'seuSegredoAqui',
+  secret: "seuSegredoAqui",
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 3600000 } // 1h
+  cookie: { maxAge: 3600000 }
 }));
 
-// Middleware para arquivos estáticos
+// Middlewares
 app.use(express.static(path.join(__dirname, "public")));
-
-// Middleware para formularios
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Configuração do Multer para upload de imagem
+// Upload de imagens
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const dir = path.join(__dirname, 'public/uploads');
+    const dir = path.join(__dirname, "public/uploads");
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
@@ -41,19 +39,19 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// ROTA DE STATUS
+// Rota de status
 app.get("/status", (req, res) => {
   res.json({ status: "Servidor rodando com Prisma e upload funcionando" });
 });
 
-// ROTA DE CADASTRO DE USUÁRIO
+// Cadastro de usuário
 app.post("/cadastrar", async (req, res) => {
   const { nome, email, cpfcnpj, telefone, senha } = req.body;
   try {
     await prisma.usuario.create({
       data: { nome, email, cpfcnpj, telefone, senha },
     });
-    res.redirect('/Login.html');
+    res.redirect("/Login.html");
   } catch (error) {
     console.error("Erro ao cadastrar usuário:", error);
     res.status(500).send(`
@@ -64,7 +62,7 @@ app.post("/cadastrar", async (req, res) => {
   }
 });
 
-// ROTA DE LOGIN
+// Login
 app.post("/login", async (req, res) => {
   const { email, senha } = req.body;
   try {
@@ -77,15 +75,15 @@ app.post("/login", async (req, res) => {
       nome: usuario.nome,
       email: usuario.email
     };
-    res.redirect('/sua-campanha.html');
+    res.redirect("/sua-campanha.html");
   } catch (error) {
     console.error("Erro no login:", error);
     res.status(500).send("<h2>Erro ao fazer login</h2><a href='/Login.html'>Tentar novamente</a>");
   }
 });
 
-// ROTA PARA VERIFICAR LOGIN
-app.get('/usuario-logado', (req, res) => {
+// Verifica se o usuário está logado
+app.get("/usuario-logado", (req, res) => {
   if (req.session.user) {
     res.json({ loggedIn: true, user: req.session.user });
   } else {
@@ -93,16 +91,16 @@ app.get('/usuario-logado', (req, res) => {
   }
 });
 
-// ROTA DE LOGOUT
-app.post('/logout', (req, res) => {
+// Logout
+app.post("/logout", (req, res) => {
   req.session.destroy(() => {
-    res.clearCookie('connect.sid');
+    res.clearCookie("connect.sid");
     res.sendStatus(200);
   });
 });
 
-// ROTA DE CADASTRO DE CAMPANHA
-app.post("/cadastrar-campanha", upload.single('imagem'), async (req, res) => {
+// Cadastro de campanha
+app.post("/cadastrar-campanha", upload.single("imagem"), async (req, res) => {
   const { nome, rua, num, telefone, tipo, descricao } = req.body;
   const imagem = req.file ? `/uploads/${req.file.filename}` : null;
 
@@ -115,12 +113,12 @@ app.post("/cadastrar-campanha", upload.single('imagem'), async (req, res) => {
       data: {
         nome,
         rua,
-        numero: num, // <-- definido como String no schema
+        numero: num,
         telefone,
         tipoSanguineo: tipo,
         descricao,
         imagem,
-        usuarioId: new ObjectId(req.session.user.id) // <-- obrigatório para MongoDB
+        usuarioId: new ObjectId(req.session.user.id)
       }
     });
     res.redirect("/sua-campanha.html");
@@ -130,35 +128,82 @@ app.post("/cadastrar-campanha", upload.single('imagem'), async (req, res) => {
   }
 });
 
-// ROTA PARA BUSCAR TODAS CAMPANHAS
-app.get('/campanhas', async (req, res) => {
+// Buscar todas as campanhas
+app.get("/campanhas", async (req, res) => {
   try {
     const campanhas = await prisma.campanha.findMany();
     res.json(campanhas);
   } catch (err) {
-    console.error('Erro ao buscar campanhas:', err);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error("Erro ao buscar campanhas:", err);
+    res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
 
-// ROTA PARA BUSCAR CAMPANHA POR ID
-app.get('/campanhas/:id', async (req, res) => {
+// Buscar campanha por ID
+app.get("/campanhas/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const campanha = await prisma.campanha.findUnique({
-      where: { id: id } // ou: new ObjectId(id), se estiver validando formato
+      where: { id }
     });
     if (!campanha) {
       return res.status(404).json({ error: "Campanha não encontrada" });
     }
     res.json(campanha);
   } catch (error) {
-    console.error('Erro ao buscar campanha:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
+    console.error("Erro ao buscar campanha:", error);
+    res.status(500).json({ error: "Erro interno do servidor" });
   }
 });
 
-// INICIAR SERVIDOR
+// 🔥 NOVA ROTA: Campanhas do usuário logado
+app.get("/minhas-campanhas", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Não autorizado" });
+  }
+
+  try {
+    const campanhas = await prisma.campanha.findMany({
+      where: {
+        usuarioId: new ObjectId(req.session.user.id)
+      }
+    });
+    res.json(campanhas);
+  } catch (error) {
+    console.error("Erro ao buscar campanhas do usuário:", error);
+    res.status(500).json({ error: "Erro ao buscar campanhas" });
+  }
+});
+
+// 🔥 NOVA ROTA: Excluir campanha
+app.delete("/campanhas/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!req.session.user) {
+    return res.status(401).json({ error: "Não autorizado" });
+  }
+
+  try {
+    const campanha = await prisma.campanha.findUnique({
+      where: { id }
+    });
+
+    if (!campanha || campanha.usuarioId.toString() !== req.session.user.id) {
+      return res.status(403).json({ error: "Você não tem permissão para excluir esta campanha." });
+    }
+
+    await prisma.campanha.delete({
+      where: { id }
+    });
+
+    res.status(200).json({ message: "Campanha excluída com sucesso." });
+  } catch (error) {
+    console.error("Erro ao excluir campanha:", error);
+    res.status(500).json({ error: "Erro ao excluir campanha." });
+  }
+});
+
+// Inicia o servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);
 });

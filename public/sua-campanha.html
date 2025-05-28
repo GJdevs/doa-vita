@@ -1,101 +1,152 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Doa Vita</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-        <nav  class="logo">
-            <a href="index.html">
-              <img src="fotos/logo.jpg" alt="logo" />
-            </a>  
-          </nav>
-       <nav>
-          <ul>
-            <li><a href="index.html">PAGINA INICIAL</a></li>
-            <li><a href="campanhas.html">CAMPANHAS</a></li>
-          </ul>
-      </nav>
-        <div class="dropdown" id="user-menu">
-        <button class="btn-campanha">SUA CAMPANHA</button>
-          <div class="btn-drop">
-            <a href="Login.html">Login</a>
-            <a href="cadastrar.html">Cadastrar</a>
-          </div>
-      </div>  
-    </header>
-   <div class="container">
-    <aside class="sidebar">
-      <p><strong>Nome</strong></p>
-      <p>Email</p>
-      <p>Telefone</p>
-    </aside>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Doa Vita</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <nav class="logo">
+      <a href="index.html">
+        <img src="fotos/logo.jpg" alt="logo" />
+      </a>
+    </nav>
+    <nav>
+      <ul>
+        <li><a href="index.html">PÁGINA INICIAL</a></li>
+        <li><a href="campanhas.html">CAMPANHAS</a></li>
+      </ul>
+    </nav>
+    <div class="dropdown" id="user-menu">
+      <button class="btn-campanha">SUA CAMPANHA</button>
+      <div class="btn-drop">
+        <a href="Login.html">Login</a>
+        <a href="cadastrar.html">Cadastrar</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+   <aside class="sidebar" id="sidebar-info">
+  <p><strong>Olá, <span id="user-nome">usuário</span></strong></p>
+</aside>
+
 
     <main class="conteudo">
       <h2>Suas campanhas ativas</h2>
-     
-
+      <div id="campanhas-container" class="campanhas-grid"></div>
       <button class="btn-cadastrar-uma-campanha">Cadastrar uma campanha</button>
     </main>
   </div>
+
   <script>
-  async function checkLogin() {
-    try {
-      const res = await fetch('/usuario-logado');
-      const data = await res.json();
+    async function carregarCampanhas() {
+      try {
+        const userRes = await fetch("/usuario-logado");
+        const userData = await userRes.json();
 
-      const dropdown = document.getElementById('user-menu');
-      const btn = dropdown.querySelector('.btn-campanha');
-      const menu = dropdown.querySelector('.btn-drop');
+        if (!userData.loggedIn) {
+          window.location.href = "Login.html";
+          return;
+        }
 
-      if (data.loggedIn) {
-        btn.textContent = 'Minhas campanhas';
-        menu.innerHTML = `
-          <a href="sua-campanha.html">Minhas campanhas</a>
-          <a href="#" id="logout-link">Sair</a>
+        // Preenche o painel lateral
+        document.getElementById("sidebar-info").innerHTML = `
+          <p><strong>Ola, ${userData.user.nome}</strong></p>
+          
         `;
 
-        document.getElementById('logout-link').addEventListener('click', async (e) => {
-          e.preventDefault();
-          await fetch('/logout', { method: 'POST' });
-          window.location.href = '/Login.html';
-        });
-      } else {
-        btn.textContent = 'Sua campanha';
-        menu.innerHTML = `
-          <a href="Login.html">Login</a>
-          <a href="cadastrar.html">Cadastrar</a>
-        `;
+        const campanhasRes = await fetch("/minhas-campanhas");
+        const campanhas = await campanhasRes.json();
+
+        const container = document.getElementById("campanhas-container");
+        container.innerHTML = "";
+
+        if (campanhas.length === 0) {
+          container.innerHTML = "<p>Você ainda não possui campanhas ativas.</p>";
+        } else {
+          campanhas.forEach(campanha => {
+            const card = document.createElement("div");
+            card.className = "campanha-card";
+            card.innerHTML = `
+              <img src="${campanha.imagem}" alt="Imagem da campanha" />
+              <h3>${campanha.nome}</h3>
+              <p><strong>Tipo Sanguíneo:</strong> ${campanha.tipoSanguineo}</p>
+              <p><strong>Endereço:</strong> ${campanha.rua}, ${campanha.numero}</p>
+              <p><strong>Telefone:</strong> ${campanha.telefone}</p>
+              <p>${campanha.descricao}</p>
+              <button class="btn-excluir" data-id="${campanha.id}">Excluir</button>
+            `;
+            container.appendChild(card);
+          });
+
+          // Eventos de exclusão
+          document.querySelectorAll(".btn-excluir").forEach(btn => {
+            btn.addEventListener("click", async () => {
+              const id = btn.dataset.id;
+              if (confirm("Deseja realmente excluir esta campanha?")) {
+                const res = await fetch(`/campanhas/${id}`, { method: "DELETE" });
+                if (res.ok) {
+                  carregarCampanhas(); // recarrega lista
+                } else {
+                  alert("Erro ao excluir campanha.");
+                }
+              }
+            });
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao carregar campanhas:", error);
       }
-    } catch (err) {
-      console.error('Erro ao verificar login:', err);
     }
-  }
 
-  checkLogin();
+    function checkLoginDropdown() {
+      fetch("/usuario-logado")
+        .then(res => res.json())
+        .then(data => {
+          const dropdown = document.getElementById("user-menu");
+          const btn = dropdown.querySelector(".btn-campanha");
+          const menu = dropdown.querySelector(".btn-drop");
 
-  // Ativa link de menu como "ativo" (útil para destacar a página atual)
-  const links = document.querySelectorAll('header nav ul li a');
-  const currentPage = window.location.pathname.split('/').pop();
-  links.forEach(link => {
-    if (link.getAttribute('href') === currentPage) {
-      link.classList.add('active');
+          if (data.loggedIn) {
+            btn.textContent = "Minhas campanhas";
+            menu.innerHTML = `
+              <a href="sua-campanha.html">Minhas campanhas</a>
+              <a href="#" id="logout-link">Sair</a>
+            `;
+            document.getElementById("logout-link").addEventListener("click", async (e) => {
+              e.preventDefault();
+              await fetch("/logout", { method: "POST" });
+              window.location.href = "/Login.html";
+            });
+          } else {
+            btn.textContent = "Sua campanha";
+            menu.innerHTML = `
+              <a href="Login.html">Login</a>
+              <a href="cadastrar.html">Cadastrar</a>
+            `;
+          }
+        });
     }
-  });
 
-  // Redireciona ao clicar no botão "Cadastrar uma campanha"
-  const cadastrarBtn = document.querySelector('.btn-cadastrar-uma-campanha');
-  if (cadastrarBtn) {
-    cadastrarBtn.addEventListener('click', () => {
-      window.location.href = 'cadastrar-campanha.html';
+    checkLoginDropdown();
+    carregarCampanhas();
+
+    // Redirecionamento para cadastrar campanha
+    document.querySelector(".btn-cadastrar-uma-campanha").addEventListener("click", () => {
+      window.location.href = "cadastrar-campanha.html";
     });
-  }
-</script>
 
-
-    
+    // Marcar menu atual
+    const links = document.querySelectorAll("header nav ul li a");
+    const currentPage = window.location.pathname.split("/").pop();
+    links.forEach(link => {
+      if (link.getAttribute("href") === currentPage) {
+        link.classList.add("active");
+      }
+    });
+  </script>
 </body>
 </html>

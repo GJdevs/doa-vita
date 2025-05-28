@@ -102,6 +102,13 @@ header nav ul li a.active::after {
 .dropdown:hover .btn-drop{
   display: block;
 }
+.btn-drop a:hover {
+  background-color: #a61b1b; /* Vermelho mais escuro */
+  color: white;
+}
+.btn-drop a {
+  transition: background-color 0.3s ease;
+}
 
 
 .logo {
@@ -401,7 +408,7 @@ flex: 1;
 }
 .btn-cadastrar-uma-campanha{
   position: absolute;
-  bottom: 30px;
+  bottom: 200px;
   right: 30px;
   padding: 12px 24px;
   background-color: #D62828;
@@ -466,5 +473,38 @@ flex: 1;
   
   font-size: 2rem;
   color: #000000;
+}
+.campanhas-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Espaço entre os cards */
+  justify-content:left; /* Centraliza e reduz espaçamento lateral */
+  padding: 20px 0;
+}
+
+.campanha-card {
+  width: 300px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  text-align: center;
+}
+
+.campanha-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+}
+
+.btn-excluir {
+  background-color: #a32020;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
 }
 
